@@ -1,5 +1,6 @@
 import express from "express";
 import AsyncHandler from "express-async-handler";
+import { isValidObjectId } from "mongoose";
 import Product from "../models/productModel.js";
 const router = express.Router();
 
@@ -16,20 +17,30 @@ router.get(
   })
 );
 
-
 // @desc Fetch single product by id
 // @route GET /api/products/:id
 // @access Public
 
 router.get(
   "/:id",
-  AsyncHandler(async (req, res) => {
+  AsyncHandler(async (req, res, next) => {
     const product = await Product.findById(req.params.id);
+
+    // Wrote this to solve CastError. Didn't work
+    // if (!isValidObjectId(req.params.id)) {
+    //   res.status(400);
+    //   throw new Error("Invalid user id");
+    // }
+    // if (product) {
+    //   res.json(product);
+    // }
+
     if (product) {
       res.json(product);
     } else {
-        console.log("eeeeeee")
-      res.status(404).json({ message: "Product not found" });
+      console.log("eh he");
+      res.status(404);
+      throw new Error("Product not found");
     }
   })
 );
