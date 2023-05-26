@@ -1,6 +1,6 @@
 import AsyncHandler from "express-async-handler";
-import generateToken from "../utils/generateToken.js";
 import User from "../models/userModel.js";
+import generateToken from "../utils/generateToken.js";
 
 // @desc    Auth user and get token
 // @route   POST /api/users/login
@@ -106,4 +106,17 @@ const updateUserProfile = AsyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, registerUser, getUserProfile, updateUserProfile };
+// @desc    Get All Users
+// @route   GET /api/users
+// @access  Private/Admin
+const getUsers = AsyncHandler(async (req, res) => {
+  // res.send("success")
+
+  const users = await User.find({});
+  res.json(users)
+
+});
+
+
+export { authUser, registerUser, getUserProfile, updateUserProfile, getUsers };
+
